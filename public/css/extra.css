@@ -1,0 +1,22 @@
+:root {
+    --primary:#007070;
+    --secondary:#2196F3;
+    --gris:#ECEFF1;
+    --gris-oscuro:#424242;
+    --verde:#4CAF50;
+}
+.bg-primary {
+    background-color: var(--primary);
+}
+.bg-secondary {
+    background-color: var(--secondary);
+}
+.bg-gris {
+    background-color: var(--gris);
+}
+.bg-gris-oscuro {
+    background-color: var(--gris-oscuro);
+}
+.bg-verde {
+    background-color: var(--verde);
+}
