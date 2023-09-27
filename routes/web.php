@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\VentaController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\EmpleadoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +33,16 @@ Route::middleware(['auth', 'verified'])->group(function(){
 
             Route::post('store', [CategoriaController::class, 'store'])->name('store-categoria');
         });
+    });
+
+    Route::prefix('ventas')->group(function() {
+        Route::get('/', [VentaController::class, 'index'])->name('ventas');
+    });
+
+    Route::prefix('empleados')->group(function() {
+        Route::get('/', [EmpleadoController::class, 'index'])->name('empleados');
+
+        Route::post('store', [EmpleadoController::class, 'store'])->name('store-empleado');
     });
 });
 

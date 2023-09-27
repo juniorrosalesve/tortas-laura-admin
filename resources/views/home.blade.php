@@ -25,7 +25,7 @@
             </div>
             <h1 class="text-center text-lg mt-1 roboto-light">Inventario</h1>
         </a>
-        <a href="#">
+        <a href="{{ route('ventas') }}">
             <div class="bg-primary w-[75px] mx-auto p-2" style="border-radius: 100%;">
                 <img src="./images/icons/ventas.png" alt="ventas" />
             </div>
@@ -43,12 +43,12 @@
             </div>
             <h1 class="text-center text-lg mt-1 roboto-light">Clientes</h1>
         </div>
-        <div>
-            <div class="bg-gray-600 w-[75px] mx-auto p-2" style="border-radius: 100%;">
+        <a href="{{ route('empleados') }}">
+            <div class="bg-primary w-[75px] mx-auto p-2" style="border-radius: 100%;">
                 <img src="./images/icons/empleados.png" alt="empleados" />
             </div>
             <h1 class="text-center text-lg mt-1 roboto-light">Empleados</h1>
-        </div>
+        </a>
         <div>
             <div class="bg-gray-600 w-[75px] mx-auto p-2" style="border-radius: 100%;">
                 <img src="./images/icons/store.png" alt="tienda" />

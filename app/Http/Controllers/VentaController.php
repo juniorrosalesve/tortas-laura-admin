@@ -10,6 +10,13 @@ use App\Models\SalidaProducto;
 
 class VentaController extends Controller
 {
+
+    public function index() {
+        return view('ventas.lista', [
+            'ventas' => Venta::all()
+        ]);
+    }
+
     public function generate_venta(Request $r) {
         $venta  =   Venta::create([
             'empleadoId' => $r->empleadoId,
