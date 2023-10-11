@@ -33,7 +33,7 @@
                         Categorías
                     </button>
                 </a>
-                <button data-modal-target="registerData" data-modal-toggle="registerData" class="bg-primary px-4 py-1 text-white rounded">
+                <button id="btnRegisterData" data-modal-target="registerData" data-modal-toggle="registerData" class="bg-primary px-4 py-1 text-white rounded">
                     Añadir
                 </button>
             </div>
@@ -82,9 +82,9 @@
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
                     <!-- CONTENT -->
-                    <form action="{{ route('store-producto') }}" method="POST">
+                    <form action="{{ route('store-producto') }}" id="formInsert" method="POST">
                         @csrf
-                        {{-- <h1 class="mb-1 text-md roboto-light">Ingresando por</h1>
+                        <h1 class="mb-1 text-md roboto-light">Ingresando por</h1>
                         <div class="grid grid-cols-2 gap-6 mb-10">
                             <div class="flex items-center pl-4 border border-gray-200 rounded">
                                 <input id="bordered-radio-1" type="radio" value="Proveedor" name="ingresaPor" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2">
@@ -98,7 +98,7 @@
                                     Producción
                                 </label>
                             </div>
-                        </div> --}}
+                        </div>
                         <div class="grid grid-cols-2 gap-6">
                             <div class="relative z-0 w-full mb-6 group">
                                 <input type="text" required name="nombre" id="nombre" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
@@ -123,8 +123,8 @@
                                     Categoría
                                 </label>
                             </div>
-                            <div class="relative z-0 w-full mb-6 group">
-                                <input type="number" required name="costo" step="0.01" id="costo" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                            <div class="relative z-0 w-full mb-6 group" id="costoPorUnidad">
+                                <input type="number" name="costo" step="0.01" id="costo" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                 <label for="costo" id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Costo por Unidad
                                 </label>
@@ -157,6 +157,50 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="my-5" id="addMateriaPrima">
+                            <div class="flex justify-between mt-3 mb-5">
+                                <div>
+                                    <h1 class="inline">Materia prima</h1>
+                                    <button type="button" class="py-0.1 px-1 rounded-lg text-slate-200 bg-green-600 inline" onclick="addMateriaPrima()">+</button>
+                                </div>
+                                <div>
+                                    <h1 id="MT_Total">Total: $0.00</h1>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-4 gap-6 my-3" id="materia_prima_1">
+                                <div class="relative z-0 w-full mb-6 group">
+                                    <select name="materiaPrima[]" onchange="onChangeMateriaPrimaProduct(this, 1)" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                        <option value="" selected>Elige una opción</option>
+                                        @foreach ($materias_primas as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        Elegir producto
+                                    </label>
+                                </div>
+                                <div class="relative z-0 w-full mb-6 group">
+                                    <input type="number" readonly id="MT_InStock_1" class="border-gray-300 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                    <label id="MT_InStockText_1" class="text-gray-500 peer-focus:font-medium absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        In Stock
+                                    </label>
+                                </div>
+                                <input type="hidden" name="materiaPrimaCosto[]" id="MT_Costo_1">
+                                <div class="relative z-0 w-full mb-6 group">
+                                    <input type="number" readonly id="MT_Precio_1"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                    <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        Precio
+                                    </label>
+                                </div>
+                                <div class="relative z-0 w-full mb-6 group">
+                                    <input type="number" required name="materiaPrimaCantidad[]" onkeyup="mtChangeCantidad(this, 1)" step="0.01"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                    <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        Cantidad
+                                    </label>
+                                </div>
+                            </div>
+                            
+                        </div>
                         <button type="submit" class="roboto-light px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                             Guardar
                         </button>
@@ -166,4 +210,181 @@
             </div>
         </div>
     </div>
+
+    <div class="grid grid-cols-4 gap-6 my-3 hidden" id="clonateMateriaPrima">
+        <div class="relative z-0 w-full mb-6 group">
+            <select name="materiaPrima[]" id="MT_Product_" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                <option value="" selected>Elige una opción</option>
+                @foreach ($materias_primas as $item)
+                    <option value="{{ $item->id }}">{{ $item->nombre }}</option>
+                @endforeach
+            </select>
+            <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                Elegir producto
+            </label>
+        </div>
+        <div class="relative z-0 w-full mb-6 group">
+            <input type="number" readonly id="MT_InStock_" class="border-gray-300 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+            <label id="MT_InStockText_" class="text-gray-500 peer-focus:font-medium absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                In Stock
+            </label>
+        </div>
+        <div class="relative z-0 w-full mb-6 group">
+            <input type="number" readonly id="MT_Precio_"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+            <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                Precio
+            </label>
+        </div>
+        <input type="hidden" name="materiaPrimaCosto[]" id="MT_Costo_">
+        <div class="relative z-0 w-full mb-6 group" id="MT_Cantidad_Container">
+            <input type="number" required name="materiaPrimaCantidad[]" id="MT_Cantidad_" step="0.01"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+            <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                Cantidad
+            </label>
+        </div>
+    </div>
+
+    <script>
+        $("#addMateriaPrima").hide();
+
+        let showBy  =   1;
+        let cachePrice  =   [];
+        let actualMateriaPrima  =   2;
+        const materiaPrima  =   @json($materias_primas);
+
+        function addMateriaPrima() {
+            const append    =   document.getElementById('clonateMateriaPrima');
+            const body      =   document.getElementById('addMateriaPrima');
+            let newInput    =   body.appendChild(append.cloneNode(true));
+            newInput.removeAttribute('id');
+            newInput.classList.remove('hidden');
+
+            $(newInput).attr('id', 'materia_prima_'+actualMateriaPrima);
+            $("#materia_prima_"+actualMateriaPrima+" #MT_Product_").attr('onchange', 'onChangeMateriaPrimaProduct(this, '+actualMateriaPrima+')');
+            $("#materia_prima_"+actualMateriaPrima+" #MT_Product_").attr('id', 'MT_Product_'+actualMateriaPrima);
+            $("#materia_prima_"+actualMateriaPrima+" #MT_InStock_").attr('id', 'MT_InStock_'+actualMateriaPrima);
+            $("#materia_prima_"+actualMateriaPrima+" #MT_InStockText_").attr('id', 'MT_InStockText_'+actualMateriaPrima);
+            
+            $("#materia_prima_"+actualMateriaPrima+" #MT_Costo_").attr('id', 'MT_Costo_'+actualMateriaPrima);
+
+            $("#materia_prima_"+actualMateriaPrima+" #MT_Precio_").attr('id', 'MT_Precio_'+actualMateriaPrima);
+            $("#materia_prima_"+actualMateriaPrima+" #MT_Cantidad_").attr('onkeyup', 'mtChangeCantidad(this, '+actualMateriaPrima+')');
+            $("#materia_prima_"+actualMateriaPrima+" #MT_Cantidad_").attr('id', 'MT_Cantidad_'+actualMateriaPrima);
+
+            $("#materia_prima_"+actualMateriaPrima+" #MT_Cantidad_Container").append('<span class="btn btn-xs btn-error float-right -mr-3 cursor-pointer text-red-600 -mt-10" onclick="removeInputCronograma(\'materia_prima_'+actualMateriaPrima+'\', '+actualMateriaPrima+')">x</span>');
+        
+
+            actualMateriaPrima++;
+        }
+        function removeInputCronograma(div, id) {
+            $("#"+div).remove();
+            let newCache    =   [];
+            for(var i = 0; i < cachePrice.length; i++) {
+                if(cachePrice[i].id != id)
+                {
+                    newCache.push({
+                        id:cachePrice[i].id,
+                        value:cachePrice[i].value
+                    });
+                }
+            }
+            cachePrice  =   newCache;
+
+            let mtTotal     =   0;
+            for(var i = 0; i < cachePrice.length; i++)
+                mtTotal     =  (cachePrice[i].value+mtTotal);
+            $("#MT_Total").html(mtTotal.toFixed(2));
+            actualMateriaPrima--;
+        }
+
+        function onChangeMateriaPrimaProduct(e, id) {
+            const value     =   e.value;
+            if(value == undefined || value == "") {
+                $("#MT_Product_"+id).val("");
+                $("#MT_InStock_"+id).val("");
+                $("#MT_Precio_"+id).val("");
+                $("#MT_Cantidad_"+id).val("");
+                $("#MT_Costo_"+id).val("");
+            }
+            const mt    =   getMateriaPrimaProduct(value);
+            if(mt != null)
+            {
+                $("#MT_InStock_"+id).val(mt.cantidad);
+                $("#MT_Precio_"+id).val(mt.precio.toFixed(2));
+                $("#MT_Costo_"+id).val(mt.costo.toFixed(2));
+            }
+        }
+
+        function mtChangeCantidad(e, id) {
+            let value1      =   $("#MT_InStock_"+id).val();
+            const price     =   $("#MT_Precio_"+id).val();
+            const value2    =   e.value;
+            if(value2 > Math.floor(value1)) {
+                if($("#MT_InStock_"+id).has("border-gray-300")) {
+                    $("#MT_InStock_"+id).removeClass('border-gray-300');
+                    $("#MT_InStockText_"+id).removeClass('text-gray-500');
+                    $("#MT_InStock_"+id).addClass('border-red-300');
+                    $("#MT_InStockText_"+id).addClass('text-red-500');
+                }
+            } else {
+                if($("#MT_InStock_"+id).has("border-red-300")) {
+                    $("#MT_InStock_"+id).removeClass('border-red-300');
+                    $("#MT_InStockText_"+id).removeClass('text-red-500');
+                    $("#MT_InStock_"+id).addClass('border-gray-300');
+                    $("#MT_InStockText_"+id).addClass('text-gray-500');
+                }
+            }
+            let exists  =   false;
+            if(cachePrice.length > 0) {
+                for(var i = 0; i < cachePrice.length; i++) {
+                    if(cachePrice[i].id == id)
+                    {
+                        cachePrice[i].value    =   (value2*price);
+                        exists  =   true;
+                        break;
+                    }
+                }
+            }
+            if(!exists)
+                cachePrice.push({
+                    id:id,
+                    value:(value2*price)
+                });
+
+            let mtTotal     =   0;
+            for(var i = 0; i < cachePrice.length; i++)
+                mtTotal     =  (cachePrice[i].value+mtTotal);
+            $("#MT_Total").html(mtTotal.toFixed(2));
+        }
+
+        function getMateriaPrimaProduct(id) {
+            let get     =   null;
+            for(var i = 0; i < materiaPrima.length; i++) {
+                if(materiaPrima[i].id == id)
+                {
+                    get     =   materiaPrima[i];
+                    break;
+                }
+            }
+            return get;
+        }
+
+        $('#formInsert input').on('change', function() {
+            let ingresaPor  =   $('input[name=ingresaPor]:checked', '#formInsert').val();
+            if(ingresaPor == 'Proveedor') {
+                if(showBy == 1)
+                    return;
+                $("#addMateriaPrima").hide();
+                $("#costoPorUnidad").show();
+                showBy = 1;
+            }
+            else {
+                if(showBy == 2)
+                    return;
+                $("#addMateriaPrima").show();
+                $("#costoPorUnidad").hide();
+                showBy = 2;
+            }     
+        });
+    </script>
 @endsection

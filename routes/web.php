@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\MateriaPrimaController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\CategoriaController;
@@ -21,6 +22,12 @@ Route::middleware(['auth', 'verified'])->group(function(){
         Route::get('/', [ProveedorController::class, 'lista'])->name('proveedores');
 
         Route::post('store', [ProveedorController::class, 'store'])->name('store-proveedor');
+    });
+
+    Route::prefix('materias-primas')->group(function() {
+        Route::get('/', [MateriaPrimaController::class, 'index'])->name('materias-primas');
+
+        Route::post('store', [MateriaPrimaController::class, 'store'])->name('store-materia-prima');
     });
     
     Route::prefix('inventario')->group(function() {

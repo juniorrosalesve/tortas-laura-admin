@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('materia_primas', function (Blueprint $table) {
+        Schema::create('inventario_materiales', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->double('costo');
-            $table->double('precio');
+            $table->unsignedBigInteger('materiaId');
+            $table->foreign('materiaId')->references('id')->on('materia_primas');
+            $table->unsignedBigInteger('inventarioId');
+            $table->foreign('inventarioId')->references('id')->on('inventarios');
             $table->integer('cantidad');
-            $table->integer('unidad');
-            $table->unsignedBigInteger('proveedorId');
-            $table->foreign('proveedorId')->references('id')->on('proveedores');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('materia_primas');
+        Schema::dropIfExists('inventario_materiales');
     }
 };

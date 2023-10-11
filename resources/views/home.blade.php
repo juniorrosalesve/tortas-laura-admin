@@ -13,12 +13,12 @@
             </div>
             <h1 class="text-center text-lg mt-1 roboto-light">Proveedores</h1>
         </a>
-        <div>
-            <div class="bg-gray-600 w-[75px] mx-auto p-2" style="border-radius: 100%;">
+        <a href="{{ route('materias-primas') }}">
+            <div class="bg-primary w-[75px] mx-auto p-2" style="border-radius: 100%;">
                 <img src="./images/icons/deposito.png" alt="materia-prima" />
             </div>
             <h1 class="text-center text-lg mt-1 roboto-light">Materia Prima</h1>
-        </div>
+        </a>
         <a href="{{ route('inventario') }}">
             <div class="bg-primary w-[75px] mx-auto p-2" style="border-radius: 100%;">
                 <img src="./images/icons/box.png" alt="inventario" />

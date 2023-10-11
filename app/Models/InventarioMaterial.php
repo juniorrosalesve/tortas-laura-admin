@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MateriaPrima extends Model
+class InventarioMaterial extends Model
 {
     use HasFactory;
 
+    protected $table    =   'inventario_materiales';
+
     protected $fillable     =   [
-        'nombre',
-        'costo',
-        'precio',
-        'cantidad',
-        'unidad',
-        'proveedorId'
+        'materiaId',
+        'inventarioId',
+        'cantidad'
     ];
 }
