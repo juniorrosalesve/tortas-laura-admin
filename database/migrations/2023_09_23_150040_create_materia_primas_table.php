@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->double('costo');
-            $table->double('precio');
+            $table->double('precio')->default(0);
             $table->integer('cantidad');
             $table->integer('unidad');
             $table->unsignedBigInteger('proveedorId');
