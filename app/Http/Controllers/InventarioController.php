@@ -39,9 +39,9 @@ class InventarioController extends Controller
                 'materiaPrimaCantidad'
             ]);
 
-            $data['costo']  =   0;
+            /* $data['costo']  =   0;
             for($i = 0; $i < sizeof($r->materiaPrimaCosto); $i++) 
-                $data['costo']  +=  ($r->materiaPrimaCosto[$i]*$r->materiaPrimaCantidad[$i]);
+                $data['costo']  +=  ($r->materiaPrimaCosto[$i]*$r->materiaPrimaCantidad[$i]); */
             
             $inventario     =   Inventario::create($data);
             for($i = 0; $i < sizeof($r->materiaPrima); $i++) {
