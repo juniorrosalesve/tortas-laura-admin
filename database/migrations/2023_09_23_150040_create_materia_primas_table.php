@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('nombre');
             $table->double('costo');
             $table->double('precio')->default(0);
-            $table->integer('cantidad');
-            $table->integer('unidad');
+            $table->double('cantidad');
+            $table->string('unidad');
             $table->unsignedBigInteger('proveedorId');
             $table->foreign('proveedorId')->references('id')->on('proveedores');
             $table->timestamps();

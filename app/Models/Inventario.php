@@ -16,6 +16,8 @@ class Inventario extends Model
         'cantidad',
         'categoriaId',
         'despachoId',
-        'proveedorId'
+        'proveedorId',
+        'produccion',
+        'inLocal'
     ];
 }

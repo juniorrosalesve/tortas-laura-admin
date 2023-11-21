@@ -44,9 +44,11 @@
                 <tr>
                     <td>#</td>
                     <td>Nombre</td>
-                    <td>Costo</td>
-                    <td>Precio de venta</td>
                     <td>Cantidad</td>
+                    <td>Precio de compra</td>
+                    <td>Precio de venta</td>
+                    <td>Ganancia</td>
+                    <td>% de Ganancia</td>
                 </tr>
             </thead>
             <tbody>
@@ -54,9 +56,11 @@
                     <tr>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->nombre }}</td>
+                        <td>{{ $item->cantidad }}</td>
                         <td>${{ number_format($item->costo, 2, ".", ",") }}</td>
                         <td>${{ number_format($item->precio, 2, ".", ",") }}</td>
-                        <td>{{ $item->cantidad }}</td>
+                        <td>${{ number_format($item->precio - $item->costo, 2, ".", ",") }}</td>
+                        <td>{{ round(($item->precio-$item->costo)*100) }}%</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -101,7 +105,7 @@
                         </div>
                         <div class="grid grid-cols-2 gap-6">
                             <div class="relative z-0 w-full mb-6 group">
-                                <input type="text" required name="nombre" id="nombre" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <input type="text" name="nombre" id="nombre" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                 <label for="nombre" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Nombre
                                 </label>
@@ -113,7 +117,7 @@
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group">
-                                <select name="categoriaId" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                <select name="categoriaId" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                     <option value="" selected>Elige una opción</option>
                                     @foreach ($categorias as $item)
                                         <option value="{{ $item->id }}">{{ $item->nombre }}</option>
@@ -130,13 +134,13 @@
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group">
-                                <input type="number" required name="precio" step="0.01" id="precio" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <input type="number" name="precio" step="0.01" id="precio" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                 <label for="precio" id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Precio por Unidad
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group" id="proveedor_container">
-                                <select name="proveedorId" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                <select name="proveedorId" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                     <option value="" selected>Elige una opción</option>
                                     @foreach ($proveedores as $item)
                                         <option value="{{ $item->id }}">{{ $item->nombre }}</option>
@@ -147,13 +151,22 @@
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group">
-                                <select name="despachoId" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                <select name="despachoId" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                     <option value="" selected>Elige una opción</option>
                                     <option value="1">Caja 1</option>
                                     <option value="2">Caja 2</option>
                                 </select>
                                 <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Se despacha por
+                                </label>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group" id="produceIn">
+                                <select name="inLocal" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                    <option value="1">Local</option>
+                                    <option value="0">Bodega</option>
+                                </select>
+                                <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Se produce en
                                 </label>
                             </div>
                         </div>
@@ -164,12 +177,12 @@
                                     <button type="button" class="py-0.1 px-1 rounded-lg text-slate-200 bg-green-600 inline" onclick="addMateriaPrima()">+</button>
                                 </div>
                                 <div>
-                                    <h1 id="MT_Total">Total: $0.00</h1>
+                                    <h1 id="MT_Total"><span class='text-xs'>Total costo de producción:</span> $0.00</h1>
                                 </div>
                             </div>
                             <div class="grid grid-cols-4 gap-6 my-3" id="materia_prima_1">
                                 <div class="relative z-0 w-full mb-6 group">
-                                    <select name="materiaPrima[]" onchange="onChangeMateriaPrimaProduct(this, 1)" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                    <select name="materiaPrima[]" onchange="onChangeMateriaPrimaProduct(this, 1)" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                         <option value="" selected>Elige una opción</option>
                                         @foreach ($materias_primas as $item)
                                             <option value="{{ $item->id }}">{{ $item->nombre }}</option>
@@ -180,20 +193,19 @@
                                     </label>
                                 </div>
                                 <div class="relative z-0 w-full mb-6 group">
-                                    <input type="number" readonly id="MT_InStock_1" class="border-gray-300 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                    <input type="text" readonly id="MT_InStock_1" class="border-gray-300 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                     <label id="MT_InStockText_1" class="text-gray-500 peer-focus:font-medium absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         In Stock
                                     </label>
                                 </div>
-                                <input type="hidden" name="materiaPrimaCosto[]" id="MT_Costo_1">
                                 <div class="relative z-0 w-full mb-6 group">
-                                    <input type="number" readonly id="MT_Precio_1"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                    <input type="number" readonly id="MT_Costo_1" name="materiaPrimaCosto[]"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                     <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                        Precio
+                                        Costo
                                     </label>
                                 </div>
                                 <div class="relative z-0 w-full mb-6 group">
-                                    <input type="number" required name="materiaPrimaCantidad[]" onkeyup="mtChangeCantidad(this, 1)" step="0.01"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                    <input type="number" name="materiaPrimaCantidad[]" onkeyup="mtChangeCantidad(this, 1)" step="0.01"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                     <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         Cantidad
                                     </label>
@@ -213,7 +225,7 @@
 
     <div class="grid grid-cols-4 gap-6 my-3 hidden" id="clonateMateriaPrima">
         <div class="relative z-0 w-full mb-6 group">
-            <select name="materiaPrima[]" id="MT_Product_" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+            <select name="materiaPrima[]" id="MT_Product_" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                 <option value="" selected>Elige una opción</option>
                 @foreach ($materias_primas as $item)
                     <option value="{{ $item->id }}">{{ $item->nombre }}</option>
@@ -224,20 +236,19 @@
             </label>
         </div>
         <div class="relative z-0 w-full mb-6 group">
-            <input type="number" readonly id="MT_InStock_" class="border-gray-300 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+            <input type="text" readonly id="MT_InStock_" class="border-gray-300 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
             <label id="MT_InStockText_" class="text-gray-500 peer-focus:font-medium absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 In Stock
             </label>
         </div>
         <div class="relative z-0 w-full mb-6 group">
-            <input type="number" readonly id="MT_Precio_"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+            <input type="number" readonly id="MT_Costo_" name="materiaPrimaCosto[]"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
             <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Precio
             </label>
         </div>
-        <input type="hidden" name="materiaPrimaCosto[]" id="MT_Costo_">
         <div class="relative z-0 w-full mb-6 group" id="MT_Cantidad_Container">
-            <input type="number" required name="materiaPrimaCantidad[]" id="MT_Cantidad_" step="0.01"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+            <input type="number" name="materiaPrimaCantidad[]" id="MT_Cantidad_" step="0.01"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
             <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Cantidad
             </label>
@@ -246,6 +257,7 @@
 
     <script>
         $("#addMateriaPrima").hide();
+        $("#produceIn").hide();
 
         let showBy  =   1;
         let cachePrice  =   [];
@@ -267,7 +279,6 @@
             
             $("#materia_prima_"+actualMateriaPrima+" #MT_Costo_").attr('id', 'MT_Costo_'+actualMateriaPrima);
 
-            $("#materia_prima_"+actualMateriaPrima+" #MT_Precio_").attr('id', 'MT_Precio_'+actualMateriaPrima);
             $("#materia_prima_"+actualMateriaPrima+" #MT_Cantidad_").attr('onkeyup', 'mtChangeCantidad(this, '+actualMateriaPrima+')');
             $("#materia_prima_"+actualMateriaPrima+" #MT_Cantidad_").attr('id', 'MT_Cantidad_'+actualMateriaPrima);
 
@@ -293,7 +304,7 @@
             let mtTotal     =   0;
             for(var i = 0; i < cachePrice.length; i++)
                 mtTotal     =  (cachePrice[i].value+mtTotal);
-            $("#MT_Total").html(mtTotal.toFixed(2));
+            $("#MT_Total").html("<span class='text-xs'>Total costo de producción:</span> $"+mtTotal.toFixed(2));
             actualMateriaPrima--;
         }
 
@@ -302,22 +313,21 @@
             if(value == undefined || value == "") {
                 $("#MT_Product_"+id).val("");
                 $("#MT_InStock_"+id).val("");
-                $("#MT_Precio_"+id).val("");
                 $("#MT_Cantidad_"+id).val("");
                 $("#MT_Costo_"+id).val("");
             }
             const mt    =   getMateriaPrimaProduct(value);
             if(mt != null)
             {
-                $("#MT_InStock_"+id).val(mt.cantidad);
-                $("#MT_Precio_"+id).val(mt.precio.toFixed(2));
+                $("#MT_InStock_"+id).val(mt.cantidad+" "+mt.unidad);
                 $("#MT_Costo_"+id).val(mt.costo.toFixed(2));
             }
         }
 
         function mtChangeCantidad(e, id) {
             let value1      =   $("#MT_InStock_"+id).val();
-            const price     =   $("#MT_Precio_"+id).val();
+            const price     =   $("#MT_Costo_"+id).val();
+            value1  =   value1.replace(/[^0-9]/g, "");
             const value2    =   e.value;
             if(value2 > Math.floor(value1)) {
                 if($("#MT_InStock_"+id).has("border-gray-300")) {
@@ -354,7 +364,7 @@
             let mtTotal     =   0;
             for(var i = 0; i < cachePrice.length; i++)
                 mtTotal     =  (cachePrice[i].value+mtTotal);
-            $("#MT_Total").html(mtTotal.toFixed(2));
+            $("#MT_Total").html("<span class='text-xs'>Total costo de producción:</span> $"+mtTotal.toFixed(2));
         }
 
         function getMateriaPrimaProduct(id) {
@@ -375,6 +385,7 @@
                 if(showBy == 1)
                     return;
                 $("#addMateriaPrima").hide();
+                $("#produceIn").hide();
                 $("#costoPorUnidad").show();
                 showBy = 1;
             }
@@ -382,6 +393,7 @@
                 if(showBy == 2)
                     return;
                 $("#addMateriaPrima").show();
+                $("#produceIn").show();
                 $("#costoPorUnidad").hide();
                 showBy = 2;
             }     

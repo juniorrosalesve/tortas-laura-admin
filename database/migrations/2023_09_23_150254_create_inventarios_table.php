@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('despachoId');
             $table->unsignedBigInteger('proveedorId');
             $table->foreign('proveedorId')->references('id')->on('proveedores');
+            $table->boolean('produccion')->default(false);
+            $table->boolean('inLocal')->default(true);
             $table->timestamps();
         });
     }

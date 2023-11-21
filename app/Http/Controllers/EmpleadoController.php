@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Empleado;
+use App\Models\TasaDolar;
 
 class EmpleadoController extends Controller
 {
@@ -19,5 +20,17 @@ class EmpleadoController extends Controller
         Empleado::create($r->except('_token'));
 
         return '<script>alert("Añadido correctamente!");location.href="'.route('empleados').'"</script>';
+    }
+
+
+    /* API Json */
+    public function authCi(Request $r) {
+        $empleado       =   Empleado::where('cedula', $r->cedula)->first();
+        $dolarToday     =   TasaDolar::orderBy('created_at', 'desc')->first();
+
+        $empleado['tasa']   =   $dolarToday->precio;
+        $empleado['tasaId'] =   $dolarToday->id;
+
+        return $empleado;
     }
 }

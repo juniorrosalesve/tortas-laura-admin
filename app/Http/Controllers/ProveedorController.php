@@ -19,4 +19,9 @@ class ProveedorController extends Controller
         Proveedor::create($r->except('_token'));
         return '<script>alert("Añadido correctamente!");location.href="'.route('proveedores').'"</script>';
     }
+
+    /* Api Producción */
+    public function api_getAll() {
+        return Proveedor::orderBy('nombre', 'asc')->get()->toJson();
+    }
 }

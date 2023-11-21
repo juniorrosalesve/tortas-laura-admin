@@ -42,6 +42,7 @@
                     <td>Unidad</td>
                     <td>Costo</td>
                     <td>Cantidad</td>
+                    <td>Total</td>
                 </tr>
             </thead>
             <tbody>
@@ -49,17 +50,10 @@
                     <tr>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->nombre }}</td>
-                        <td>
-                            @if ($item->unidad == 1)
-                                Unidades
-                            @elseif($item->unidad == 2)
-                                Gramos
-                            @else
-                                Mililitros
-                            @endif
-                        </td>
+                        <td>{{ $item->unidad }}</td>
                         <td>${{ number_format($item->costo, 2, ".", ",") }}</td>
                         <td>{{ $item->cantidad }}</td>
+                        <td>${{ number_format(($item->costo*$item->cantidad), 2, ".", ",") }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -97,9 +91,11 @@
                             <div class="relative z-0 w-full mb-6 group">
                                 <select name="unidad" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                     <option value="" selected>Elige una opción</option>
-                                    <option value="1">Unidad</option>
-                                    <option value="2">Grámos</option>
-                                    <option value="3">Mililitros</option>
+                                    <option value="Unidad">Unidad</option>
+                                    <option value="Kilogramos">Kilogramos</option>
+                                    <option value="Gramos">Gramos</option>
+                                    <option value="Litros">Litros</option>
+                                    <option value="Mililitros">Mililitros</option>
                                 </select>
                                 <label for="unidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Unidad

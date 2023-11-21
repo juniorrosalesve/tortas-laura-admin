@@ -44,6 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function(){
 
     Route::prefix('ventas')->group(function() {
         Route::get('/', [VentaController::class, 'index'])->name('ventas');
+        Route::get('tasa-dolar', [VentaController::class, 'tasas'])->name('tasas');
+
+        Route::post('tasa-dolar-create', [VentaController::class, 'store_tasa'])->name('store-tasa');
     });
 
     Route::prefix('empleados')->group(function() {

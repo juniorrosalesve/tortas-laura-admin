@@ -16,4 +16,8 @@ class InventarioMaterial extends Model
         'inventarioId',
         'cantidad'
     ];
+
+    public function materia() {
+        return $this->belongsTo('App\Models\MateriaPrima', 'materiaId');
+    }    
 }

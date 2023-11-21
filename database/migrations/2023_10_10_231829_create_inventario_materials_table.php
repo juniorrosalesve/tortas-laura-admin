@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('materiaId')->references('id')->on('materia_primas');
             $table->unsignedBigInteger('inventarioId');
             $table->foreign('inventarioId')->references('id')->on('inventarios');
-            $table->integer('cantidad');
+            $table->double('cantidad');
             $table->timestamps();
         });
     }

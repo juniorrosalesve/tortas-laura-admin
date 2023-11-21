@@ -11,13 +11,23 @@
                         Inicio
                     </a>
                 </li>
+                <li class="inline-flex items-center">
+                    <a href="{{ route('ventas') }}" class="roboto-medium inline-flex items-center text-sm font-medium text-gray-700 hover:text-green-900">
+                        <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                        </svg>
+                        <span class="roboto-medium ml-1 text-sm font-medium text-gray-500 md:ml-2">
+                            Ventas
+                        </span>
+                    </a>
+                </li>
                 <li aria-current="page">
                     <div class="flex items-center">
                         <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
                         <span class="roboto-medium ml-1 text-sm font-medium text-gray-500 md:ml-2">
-                            Ventas
+                            Tasas
                         </span>
                     </div>
                 </li>
@@ -25,14 +35,9 @@
         </nav>
         <div class="flex justify-between mb-7">
             <div>
-                <h1 class="text-3xl">Ventas</h1>
+                <h1 class="text-3xl">Tasas</h1>
             </div>
             <div>
-                <a href="{{ route('tasas') }}">
-                    <button class="bg-secondary px-4 py-1 text-white rounded">
-                        Tasa del dólar
-                    </button>
-                </a>
                 <button data-modal-target="registerData" data-modal-toggle="registerData" class="bg-primary px-4 py-1 text-white rounded">
                     Añadir
                 </button>
@@ -42,23 +47,19 @@
         <table id="table">
             <thead>
                 <tr>
-                    <td>#</td>
-                    <td>En caja</td>
-                    <td>Atendido por</td>
-                    <td>N° Mesa</td>
-                    <td>Total</td>
-                    <td>Total VES</td>
+                    <td>Fecha</td>
+                    <td>Precio</td>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($ventas as $item)
+                @foreach ($tasas as $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
-                        <td>José</td>
-                        <td>José</td>
-                        <td>{{ $item->mesa }}</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <td>
+                            {{ date("d-m-y h:i A", strtotime($item->created_at)) }}
+                        </td>
+                        <td>
+                            ${{ number_format($item->precio, 2, ".", ",") }}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -72,7 +73,7 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t">
                     <h3 class="text-xl text-gray-900 roboto-mediumitalic">
-                        Añadir Categoría
+                        Añadir nueva tasa
                     </h3>
                     <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center" data-modal-hide="registerData">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -84,7 +85,20 @@
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
                     <!-- CONTENT -->
-
+                    <form action="{{ route('store-tasa') }}" method="POST">
+                        @csrf
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="relative z-0 w-full mb-6 group">
+                                <input type="number" step="0.01" required name="precio" id="precio" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <label for="precio" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Precio
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="roboto-light px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                            Guardar
+                        </button>
+                    </form>
                 </div>
                 <button data-modal-hide="registerData" id="insertHidden" type="button" class="hidden"></button>
             </div>
