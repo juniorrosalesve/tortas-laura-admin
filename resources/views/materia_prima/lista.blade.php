@@ -49,7 +49,11 @@
                 @foreach ($materias_primas as $item)
                     <tr>
                         <td>{{ $item->id }}</td>
-                        <td>{{ $item->nombre }}</td>
+                        <td>
+                            <a href="javascript:void(0)" class="underline" onclick="editarProducto({{ $item->id }})">
+                                {{ $item->nombre }}
+                            </a>
+                        </td>
                         <td>{{ $item->unidad }}</td>
                         <td>${{ number_format($item->costo, 2, ".", ",") }}</td>
                         <td>{{ $item->cantidad }}</td>
@@ -113,12 +117,6 @@
                                     Costo por Unidad
                                 </label>
                             </div>
-                            <!--<div class="relative z-0 w-full mb-6 group">
-                                <input type="number" required name="precio" step="0.01" id="precio" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
-                                <label for="precio" id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Precio por Unidad
-                                </label>
-                            </div>-->
                             <div class="relative z-0 w-full mb-6 group" id="proveedor_container">
                                 <select name="proveedorId" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                     <option value="" selected>Elige una opción</option>
@@ -140,4 +138,97 @@
             </div>
         </div>
     </div>
+
+    <div id="editData" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-[1024px] max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t">
+                    <h3 class="text-xl text-gray-900 roboto-mediumitalic">
+                        Añadir Materia Prima
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center" data-modal-hide="editData">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <!-- CONTENT -->
+                    <form action="{{ route('update-materia-prima') }}" id="editFormModal" method="POST">
+                        @csrf
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="relative z-0 w-full mb-6 group">
+                                <input type="text" required name="nombre" id="editNombre" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <label for="nombre" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Nombre
+                                </label>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <select name="unidad" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                    <option value="" selected>Elige una opción</option>
+                                    <option value="Unidad">Unidad</option>
+                                    <option value="Kilogramos">Kilogramos</option>
+                                    <option value="Litros">Litros</option>
+                                </select>
+                                <label for="unidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Unidad
+                                </label>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <input type="number" value="0" min="1" name="cantidad" id="cantidad" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <label for="cantidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Cantidad
+                                </label>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <input type="number" required name="costo" step="0.01" id="costo" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <label for="costo" id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Costo por Unidad
+                                </label>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group" id="proveedor_container">
+                                <select name="proveedorId" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                    <option value="" selected>Elige una opción</option>
+                                    @foreach ($proveedores as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="proveedor" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Proveedor
+                                </label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="materiaId" value="">
+                        <button type="submit" class="roboto-light px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                            Guardar
+                        </button>
+                    </form>
+                </div>
+                <button data-modal-hide="registerData" id="insertHidden" type="button" class="hidden"></button>
+            </div>
+        </div>
+    </div>
+    <button class="hidden" id="openTheFuckingEdit" data-modal-toggle="editData">Abrir modal</button>
+    <script>
+        function editarProducto(id) {
+            $.get('{{ url("materias-primas/item") }}' + '/'+id, function(data) {
+                var jsonData = JSON.parse(data);
+                console.log(jsonData);
+                // Muestra el modal
+                $('#openTheFuckingEdit').click();
+                // Rellena los campos del formulario con los datos del producto
+                $('#editFormModal input[name="nombre"]').val(jsonData.nombre);
+                $('#editFormModal select[name="unidad"]').val(jsonData.unidad);
+                $('#editFormModal input[name="cantidad"]').val(jsonData.cantidad);
+                $('#editFormModal input[name="costo"]').val(jsonData.costo);
+                $('#editFormModal select[name="proveedorId"]').val(jsonData.proveedorId);
+                
+                $('#editFormModal input[name="materiaId"]').val(jsonData.id);
+            });
+        }
+    </script>
 @endsection

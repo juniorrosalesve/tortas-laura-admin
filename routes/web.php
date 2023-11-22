@@ -28,6 +28,9 @@ Route::middleware(['auth', 'verified'])->group(function(){
         Route::get('/', [MateriaPrimaController::class, 'index'])->name('materias-primas');
 
         Route::post('store', [MateriaPrimaController::class, 'store'])->name('store-materia-prima');
+
+        Route::get('/item/{id}', [MateriaPrimaController::class, 'edit'])->name('edit-materia-prima');
+        Route::post('/item-update/', [MateriaPrimaController::class, 'update'])->name('update-materia-prima');
     });
     
     Route::prefix('inventario')->group(function() {
