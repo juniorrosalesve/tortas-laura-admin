@@ -56,7 +56,7 @@
                         </td>
                         <td>{{ $item->unidad }}</td>
                         <td>${{ number_format($item->costo, 2, ".", ",") }}</td>
-                        <td>{{ number_format($item->cantidad, 2, ".", ",") }}</td>
+                        <td>{{ number_format($item->cantidad, 3, ".", ",") }}</td>
                         <td>${{ number_format(($item->costo*$item->cantidad), 2, ".", ",") }}</td>
                     </tr>
                 @endforeach
