@@ -40,7 +40,7 @@
                     <td>#</td>
                     <td>Nombre</td>
                     <td>Unidad</td>
-                    <td>Costo</td>
+                    <td>Costo*U</td>
                     <td>Cantidad</td>
                     <td>Total</td>
                 </tr>
@@ -56,8 +56,14 @@
                         </td>
                         <td>{{ $item->unidad }}</td>
                         <td>${{ number_format($item->costo, 2, ".", ",") }}</td>
-                        <td>{{ number_format($item->cantidad, 3, ".", ",") }}</td>
-                        <td>${{ number_format(($item->costo*$item->cantidad), 2, ".", ",") }}</td>
+                        <td>
+                            @if($item->unidad != 'Unidad')
+                                {{ number_format($item->cantidad, 3, ".", ",") }}
+                            @else
+                                {{ $item->cantidad }}
+                            @endif
+                        </td>
+                        <td>${{ number_format(($item->cantidad < 1 ? $item->costo : $item->costo*$item->cantidad), 2, ".", ",") }}</td>
                     </tr>
                 @endforeach
             </tbody>
