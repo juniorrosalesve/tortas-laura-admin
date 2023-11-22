@@ -221,7 +221,7 @@
                 // Rellena los campos del formulario con los datos del producto
                 $('#editFormModal input[name="nombre"]').val(jsonData.nombre);
                 $('#editFormModal select[name="unidad"]').val(jsonData.unidad);
-                $('#editFormModal input[name="cantidad"]').val(jsonData.cantidad.toFixed(3));
+                $('#editFormModal input[name="cantidad"]').val(jsonData.cantidad);
                 $('#editFormModal input[name="costo"]').val(jsonData.costo);
                 $('#editFormModal select[name="proveedorId"]').val(jsonData.proveedorId);
                 
