@@ -66,7 +66,11 @@
                         @endphp
                         <td>
                             @if ($item->unidad == 'Unidad')
-                                ${{ number_format(($item->costo/$item->presentacion)*$item->cantidad, 2, ".", ",") }}
+                                @if ($item->presentacion != 0)
+                                    ${{ number_format(($item->costo/$item->presentacion)*$item->cantidad, 2, ".", ",") }}
+                                @else
+                                    $0.00
+                                @endif
                             @else
                                 ${{ number_format(($item->cantidad*$item->costo), 2, ".", ",") }}
                             @endif
