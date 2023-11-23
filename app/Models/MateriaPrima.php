@@ -15,6 +15,7 @@ class MateriaPrima extends Model
         'precio',
         'cantidad',
         'unidad',
+        'presentacion',
         'proveedorId'
     ];
 }

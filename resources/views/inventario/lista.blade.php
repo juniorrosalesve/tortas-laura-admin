@@ -244,7 +244,7 @@
         <div class="relative z-0 w-full mb-6 group">
             <input type="number" readonly id="MT_Costo_" name="materiaPrimaCosto[]"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
             <label id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                Precio
+                Costo
             </label>
         </div>
         <div class="relative z-0 w-full mb-6 group" id="MT_Cantidad_Container">
@@ -319,8 +319,11 @@
             const mt    =   getMateriaPrimaProduct(value);
             if(mt != null)
             {
-                $("#MT_InStock_"+id).val(mt.cantidad+" "+mt.unidad);
-                $("#MT_Costo_"+id).val(mt.costo.toFixed(2));
+                $("#MT_InStock_"+id).val(mt.cantidad*mt.presentacion+" "+mt.unidad);
+                if(mt.unidad != 'Unidad')
+                    $("#MT_Costo_"+id).val(mt.costo/1000);
+                else
+                    $("#MT_Costo_"+id).val(((mt.cantidad*mt.costo)/mt.cantidad)/mt.presentacion);
             }
         }
 
@@ -349,7 +352,9 @@
                 for(var i = 0; i < cachePrice.length; i++) {
                     if(cachePrice[i].id == id)
                     {
-                        cachePrice[i].value    =   (value2*price);
+                        // const costoPerGramo     =   price/1000;
+
+                        cachePrice[i].value     =   price*value2;
                         exists  =   true;
                         break;
                     }
@@ -364,7 +369,7 @@
             let mtTotal     =   0;
             for(var i = 0; i < cachePrice.length; i++)
                 mtTotal     =  (cachePrice[i].value+mtTotal);
-            $("#MT_Total").html("<span class='text-xs'>Total costo de producción:</span> $"+mtTotal.toFixed(2));
+            $("#MT_Total").html("<span class='text-xs'>Total costo de producción:</span> $"+mtTotal.toLocaleString('es-VE'));
         }
 
         function getMateriaPrimaProduct(id) {

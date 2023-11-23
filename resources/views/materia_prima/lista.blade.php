@@ -39,8 +39,9 @@
                 <tr>
                     <td>#</td>
                     <td>Nombre</td>
+                    <td>Presentación</td>
                     <td>Unidad</td>
-                    <td>Costo*U</td>
+                    <td>Costo</td>
                     <td>Cantidad</td>
                     <td>Total</td>
                 </tr>
@@ -54,16 +55,16 @@
                                 {{ $item->nombre }}
                             </a>
                         </td>
+                        <td>{{ $item->presentacion }}</td>
                         <td>{{ $item->unidad }}</td>
                         <td>${{ number_format($item->costo, 2, ".", ",") }}</td>
                         <td>
-                            @if($item->unidad != 'Unidad')
-                                {{ number_format($item->cantidad, 3, ".", ",") }}
-                            @else
-                                {{ $item->cantidad }}
-                            @endif
+                            {{ $item->cantidad }}
                         </td>
-                        <td>${{ number_format(($item->cantidad < 1 ? $item->costo : $item->costo*$item->cantidad), 2, ".", ",") }}</td>
+                        @php 
+                            $costoPerGramo  =   $item->costo/1000;
+                        @endphp
+                        <td>${{ number_format($item->cantidad*$item->costo, 2, ".", ",") }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -102,23 +103,29 @@
                                 <select name="unidad" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                     <option value="" selected>Elige una opción</option>
                                     <option value="Unidad">Unidad</option>
-                                    <option value="Kilogramos">Kilogramos</option>
-                                    <option value="Litros">Litros</option>
+                                    <option value="Gramos">Gramos</option>
+                                    <option value="Mililitros">Mililitros</option>
                                 </select>
                                 <label for="unidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Unidad
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group">
-                                <input type="number" value="0" min="0" step="0.001" name="cantidad" id="cantidad" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
-                                <label for="cantidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Cantidad
+                                <input type="number" value="0" min="0" step="0.001" name="presentacion" id="presentacion" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <label for="presentacion" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Presentación
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group">
                                 <input type="number" required name="costo" step="0.01" id="costo" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                 <label for="costo" id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Costo por Unidad
+                                    Costo
+                                </label>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <input type="number" value="0" min="0" name="cantidad" id="cantidad" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <label for="cantidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Cantidad
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group" id="proveedor_container">
@@ -175,23 +182,29 @@
                                 <select name="unidad" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                     <option value="" selected>Elige una opción</option>
                                     <option value="Unidad">Unidad</option>
-                                    <option value="Kilogramos">Kilogramos</option>
-                                    <option value="Litros">Litros</option>
+                                    <option value="Gramos">Gramos</option>
+                                    <option value="Mililitros">Mililitros</option>
                                 </select>
                                 <label for="unidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Unidad
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group">
-                                <input type="number" value="0" min="0" step="0.001" name="cantidad" id="cantidad" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
-                                <label for="cantidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Cantidad
+                                <input type="number" value="0" min="0" step="0.001" name="presentacion" id="presentacion" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <label for="presentacion" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Presentación
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group">
                                 <input type="number" required name="costo" step="0.01" id="costo" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
                                 <label for="costo" id="label-costo" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Costo por Unidad
+                                    Costo
+                                </label>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <input type="number" value="0" min="0" name="cantidad" id="cantidad" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                <label for="cantidad" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Cantidad
                                 </label>
                             </div>
                             <div class="relative z-0 w-full mb-6 group" id="proveedor_container">
@@ -227,6 +240,7 @@
                 // Rellena los campos del formulario con los datos del producto
                 $('#editFormModal input[name="nombre"]').val(jsonData.nombre);
                 $('#editFormModal select[name="unidad"]').val(jsonData.unidad);
+                $('#editFormModal input[name="presentacion"]').val(jsonData.presentacion);
                 $('#editFormModal input[name="cantidad"]').val(jsonData.cantidad);
                 $('#editFormModal input[name="costo"]').val(jsonData.costo);
                 $('#editFormModal select[name="proveedorId"]').val(jsonData.proveedorId);
