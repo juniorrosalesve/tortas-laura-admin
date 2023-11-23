@@ -64,7 +64,13 @@
                         @php 
                             $costoPerGramo  =   $item->costo/1000;
                         @endphp
-                        <td>${{ number_format($item->cantidad*$item->costo, 2, ".", ",") }}</td>
+                        <td>
+                            @if ($item->unidad == 'Unidad')
+                                ${{ number_format(($item->costo/$item->presentacion)*$item->cantidad, 2, ".", ",") }}
+                            @else
+                                ${{ number_format(($item->cantidad*$item->costo), 2, ".", ",") }}
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
