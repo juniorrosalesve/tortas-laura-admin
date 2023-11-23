@@ -58,9 +58,7 @@
                         <td>{{ $item->presentacion }}</td>
                         <td>{{ $item->unidad }}</td>
                         <td>${{ number_format($item->costo, 2, ".", ",") }}</td>
-                        <td>
-                            {{ $item->cantidad }}
-                        </td>
+                        <td>{{ number_format($item->cantidad, 0, ".", ",") }}</td>
                         @php 
                             $costoPerGramo  =   $item->costo/1000;
                         @endphp
@@ -72,7 +70,7 @@
                                     $0.00
                                 @endif
                             @else
-                                ${{ number_format(($item->cantidad*$item->costo), 2, ".", ",") }}
+                                ${{ number_format(($item->cantidad*$costoPerGramo), 2, ".", ",") }}
                             @endif
                         </td>
                     </tr>
