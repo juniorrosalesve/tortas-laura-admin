@@ -319,7 +319,7 @@
             const mt    =   getMateriaPrimaProduct(value);
             if(mt != null)
             {
-                $("#MT_InStock_"+id).val(mt.cantidad*mt.presentacion+" "+mt.unidad);
+                $("#MT_InStock_"+id).val(mt.cantidad.toLocaleString('es-VE')+" "+mt.unidad);
                 if(mt.unidad != 'Unidad')
                     $("#MT_Costo_"+id).val(mt.costo/1000);
                 else
