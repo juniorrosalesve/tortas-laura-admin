@@ -42,23 +42,79 @@
         <table id="table">
             <thead>
                 <tr>
-                    <td>#</td>
-                    <td>En caja</td>
+                    <td>Fecha</td>
+                    <td>Mesa</td>
                     <td>Atendido por</td>
-                    <td>N° Mesa</td>
+                    <td>Tasa</td>
+                    <td>Total deuda</td>
+                    <td>Total pagado VES</td>
+                    <td>Total pagado</td>
+                    <td>Vuelto VES</td>
+                    <td>Vuelto</td>
                     <td>Total</td>
-                    <td>Total VES</td>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($ventas as $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
-                        <td>José</td>
-                        <td>José</td>
-                        <td>{{ $item->mesa }}</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <td>
+                            @php
+                                $totalVES       =   0;
+                                $totalDolar     =   0;
+                                $deuda          =   0;
+                                $vueltoVES      =   0;
+                                $vueltoDolar    =   0;
+                                
+                                $timestamp = $item['created_at'] / 1000;
+                                $date = new DateTime("@$timestamp");
+                                $date->setTimezone(new DateTimeZone('America/Caracas'));
+                                if(isset($item['pagos']) && !empty($item['pagos'])) {
+                                    for($i = 0; $i < sizeof($item['pagos']); $i++) {
+                                        if(!$item['pagos'][$i]['isDolar'])
+                                            $totalVES       +=  $item['pagos'][$i]['monto'];
+                                        else
+                                            $totalDolar     +=  $item['pagos'][$i]['monto'];
+                                    }
+                                }
+                                if(isset($item['productos']) && !empty($item['productos'])) {
+                                    for($i = 0; $i < sizeof($item['productos']); $i++)
+                                        $deuda  +=  $item['productos'][$i]['precio'];
+                                }
+                                if(isset($item['vueltos']) && !empty($item['vueltos'])) {
+                                    for($i = 0; $i < sizeof($item['vueltos']); $i++) {
+                                        if(!$item['vueltos'][$i]['isDolar'])
+                                            $vueltoVES      +=   $item['vueltos'][$i]['monto'];
+                                        else 
+                                            $vueltoDolar    +=   $item['vueltos'][$i]['monto'];
+                                    }
+                                }
+                                $nombreCompleto = $item['empleado'];
+                                $partes = explode(' ', $nombreCompleto); // Divide el nombre completo en partes
+                                $primerNombre = $partes[0]; // El primer nombre es la primera parte
+                                $primerLetraApellido = substr($partes[1], 0, 3); // La primera letra del apellido es el primer carácter de la segunda parte
+                                $nombreFormateado = $primerNombre . ' ' . $primerLetraApellido . '.'; // Combina el primer nombre y la primera letra del apellido
+                            @endphp
+                            {{ $date->format('d-m-y h:i A'); }}
+                        </td>
+                        <td>{{ ($item['mesa'] == 0 ? 'Caja' : $item['mesa']) }}</td>
+                        <td>{{ $nombreFormateado }}</td>
+                        <td>{{ $item['tasa'] }}</td>
+                        <td>${{ number_format($deuda, 2, ".", ",") }}</td>
+                        <td>{{ number_format($totalVES, 2, ".", ",") }} VES</td>
+                        <td>${{ number_format($totalDolar, 2, ".", ",") }}</td>
+                        <td>{{ number_format($vueltoVES, 2, ".", ",") }} VES</td>
+                        <td>${{ number_format($vueltoDolar, 2, ".", ",") }}</td>
+                        <td>
+                            @php
+                                $tasas  =   [
+                                    ($totalVES == 0 ? 0 : $totalVES/$item['tasa']),
+                                    ($vueltoVES == 0 ? 0 : $vueltoVES/$item['tasa'])
+                                ];
+                                $total  =  ($tasas[0]+$totalDolar);
+                                $total  =  ($total-($tasas[1]+$vueltoDolar)); 
+                            @endphp
+                            ${{ number_format($total, 2, ".", ",") }}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 use App\Models\Venta;
 use App\Models\SalidaProducto;
@@ -14,8 +15,10 @@ class VentaController extends Controller
 {
 
     public function index() {
+        $response = Http::get('http://localhost:9999/');
+
         return view('ventas.lista', [
-            'ventas' => Venta::all()
+            'ventas' => $response->json()
         ]);
     }
     public function tasas() {
@@ -35,22 +38,20 @@ class VentaController extends Controller
         return $generateId->id;
     }
 
-    public function generate_venta(Request $r) {
-        $venta  =   Venta::create([
-            'empleadoId' => $r->empleadoId,
-            'mesa' => $r->mesa,
-            'numeroPedidoLocal' => $r->numeroPedidoLocal,
-            'tasa' => 33.99
-        ]);
-        $productos  =   json_decode($r->productos, true);
-        for($i = 0; $i < sizeof($productos); $i++) {
-            SalidaProducto::create([
-                'ventaId' => $venta->id,
-                'nombre' => $productos[$i]['nombre'],
-                'precio' => $productos[$i]['precio'],
-                'cantidad' => $productos[$i]['cantidad'],
-            ]);
-        }
-        return 1;
+    public function getVentas() {
+        $url = "https://firestore.googleapis.com/v1/projects/tortas-de-laura/databases/(default)/pedidos";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ya29.a0AfB_byCHVYBfoPYhQsN93OotNEdpIJK8aSzb4ccpc5ZHlB1dl2M1a_oBwO-5JxxxHBdaq9hufhwin-MML2RdaL0BkhpxCl3mo8yRt8xL9ivJojgwl1-T8p05hrCRHCwV7GKblJMpT5jyxZ71SBiXJvCGD2ArvQfcNYXUaCgYKAaYSARMSFQHGX2MiVxV1z5lo29qCrrmbFhrOYw0171'
+        ));
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $response = json_decode($response, true);
+
     }
 }
