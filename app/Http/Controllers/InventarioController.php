@@ -71,10 +71,10 @@ class InventarioController extends Controller
         $categorias     =   Categoria::orderBy('nombre', 'asc')->get();
         for($i = 0; $i < sizeof($categorias); $i++) {
             $categorias[$i]['productos']  =   $categorias[$i]->productos;
-            for($x = 0; $x < sizeof($categorias[$i]['productos']); $x++)
-            {
-                $producto   =   $categorias[$i]['productos'][$x];
-                if(sizeof($producto) > 0) {
+            if(!empty($categorias[$i]->productos)) {
+                for($x = 0; $x < sizeof($categorias[$i]['productos']); $x++)
+                {
+                    $producto   =   $categorias[$i]['productos'][$x];
                     if($producto->produccion == true && $producto->inLocal == true) {
                         $categorias[$i]['canExtra']     =   true;
 
@@ -87,9 +87,9 @@ class InventarioController extends Controller
                     else 
                         $categorias[$i]['canExtra']     =   false;
                 }
-                else
-                    $categorias[$i]['canExtra']     =   false;
             }
+            else
+                $categorias[$i]['canExtra']     =   false;
         }
         return json_encode($categorias);
     }
