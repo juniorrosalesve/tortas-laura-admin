@@ -75,7 +75,7 @@ class InventarioController extends Controller
                 for($x = 0; $x < sizeof($categorias[$i]['productos']); $x++)
                 {
                     $producto   =   $categorias[$i]['productos'][$x];
-                    if($producto->produccion == 1 && $producto->inLocal == 1) {
+                    if($producto->produccion && $producto->inLocal) {
                         $categorias[$i]['canExtra']     =   true;
 
                         $getMateriales  =   InventarioMaterial::where('inventarioId', $producto->id)->get();
