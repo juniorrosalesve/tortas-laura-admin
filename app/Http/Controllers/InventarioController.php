@@ -74,18 +74,21 @@ class InventarioController extends Controller
             for($x = 0; $x < sizeof($categorias[$i]['productos']); $x++)
             {
                 $producto   =   $categorias[$i]['productos'][$x];
-                $categorias[$i]['canExtra']  =   false;
-                if($categorias[$i]->nombre == 'Adicionales')
-                    continue;
-                if($producto->produccion == true && $producto->inLocal == true) {
-                    $categorias[$i]['canExtra']     =   true;
+                if(sizeof($producto) > 0) {
+                    if($producto->produccion == true && $producto->inLocal == true) {
+                        $categorias[$i]['canExtra']     =   true;
 
-                    $getMateriales  =   InventarioMaterial::where('inventarioId', $producto->id)->get();
-                    $materiales     =   [];
-                    for($z = 0; $z < sizeof($getMateriales); $z++)
-                        $materiales[]   =   $getMateriales[$z]->materia->nombre;
-                    $categorias[$i]['productos'][$x]['materiales']  =   $materiales;
+                        $getMateriales  =   InventarioMaterial::where('inventarioId', $producto->id)->get();
+                        $materiales     =   [];
+                        for($z = 0; $z < sizeof($getMateriales); $z++)
+                            $materiales[]   =   $getMateriales[$z]->materia->nombre;
+                        $categorias[$i]['productos'][$x]['materiales']  =   $materiales;
+                    }
+                    else 
+                        $categorias[$i]['canExtra']     =   false;
                 }
+                else
+                    $categorias[$i]['canExtra']     =   false;
             }
         }
         return json_encode($categorias);

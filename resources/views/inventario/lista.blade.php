@@ -59,7 +59,7 @@
                         <td>{{ $item->cantidad }}</td>
                         <td>${{ number_format($item->costo, 2, ".", ",") }}</td>
                         <td>${{ number_format($item->precio, 2, ".", ",") }}</td>
-                        <td>${{ number_format($item->precio - $item->costo, 2, ".", ",") }}</td>
+                        <td>${{ number_format($item->precio/($item->cantidad == 0 ? 0 : $item->cantidad), 2, ".", ",") }}</td>
                         <td>{{ round(($item->precio-$item->costo)*100) }}%</td>
                     </tr>
                 @endforeach
