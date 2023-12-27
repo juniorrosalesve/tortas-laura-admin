@@ -42,6 +42,104 @@
         <table id="table">
             <thead>
                 <tr>
+                    <td>PedidoId</td>
+                    {{-- <td>Hora</td> --}}
+                    <td>Producto</td>
+                    <td>Cantidad</td>
+                    <td>Precio del producto</td>
+                    <td>Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $fechaIndicada = '23-12-2023'; // Actualiza esto con la fecha que deseas
+                    $productosAgrupados = array(); // Mover esta línea aquí
+                @endphp
+                
+                @foreach ($ventas as $venta)
+                    @if ($venta['finished'] == 0)
+                        @continue
+                    @endif
+                    @php
+                        $timestamp  =   $venta['created_at'] / 1000;
+                        $date = new DateTime("@$timestamp");
+                        $date->setTimezone(new DateTimeZone('America/Caracas'));
+                        
+                        // Convertir la fecha al formato "d-m-Y"
+                        $fecha = $date->format('d-m-Y');
+                        $xventas    =   [];
+                    @endphp
+                    @if ($fecha == $fechaIndicada)
+                        @foreach ($venta['productos'] as $item)
+                            {{-- @if ($item['despachoId'] == 1)
+                                @continue
+                            @endif
+                            @if(strpos($item['nombre'], 'Merengada') === false && strpos($item['nombre'], 'Vaso') === false && strpos($item['nombre'], 'Batido') === false)
+                                <tr>
+                                    <td>{{ $venta['id'] }}</td>
+                                    <td>{{ $date->format('d-m-y h:i A') }}</td>
+                                    <td>{{ $item['nombre'] }}</td>
+                                    <td>{{ $item['cantidad'] }}</td>
+                                    <td>{{ $item['precio'] }}</td>
+                                    <td>{{ $item['precio']*$item['cantidad'] }}</td>
+                                </tr>
+                            @endif --}}
+                            <tr>
+                                <td>{{ $venta['id'] }}</td>
+                                {{-- <td>{{ $date->format('d-m-y h:i A') }}</td> --}}
+                                <td>{{ $item['nombre'] }}</td>
+                                <td>{{ $item['cantidad'] }}</td>
+                                <td>{{ $item['precio'] }}</td>
+                                <td>{{ $item['precio']*$item['cantidad'] }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
+                @endforeach
+            </tbody>
+            <!-- Cafes -->
+            {{-- <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Despachado</th>
+                    <th>Producto</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($ventas as $item)
+                    @php
+                        $cafes      =   [];
+                        $despachado =   [];
+                        if(!empty($item['productos'])) {
+                            for($i = 0; $i < sizeof($item['productos']); $i++)
+                            {
+                                if($item['productos'][$i]['despachoId'] == 2 && $item['finished'] != 0) {
+                                    if (strpos($item['productos'][$i]['nombre'], 'Merengada') === false && strpos($item['productos'][$i]['nombre'], 'Batido') === false) {
+                                        $cafes[] = $item['productos'][$i]['nombre'];
+                                        $timestamp  =   $item['productos'][$i]['delivery_at'] / 1000;
+                                        $date = new DateTime("@$timestamp");
+                                        $date->setTimezone(new DateTimeZone('America/Caracas'));
+                                        $despachado[]   =   $date;
+                                    }
+                                }
+                            }
+                        }
+                        $timestamp  =   $item['created_at'] / 1000;
+                        $date = new DateTime("@$timestamp");
+                        $date->setTimezone(new DateTimeZone('America/Caracas'));
+                        $i = 0;
+                    @endphp
+                    @foreach ($cafes as $cafe)
+                        <tr>
+                            <td>{{ $date->format('d-m-y h:i A') }}</td>
+                            <td>{{ $despachado[$i]->format('d-m-y h:i A') }}</td>
+                            <td>{{ $cafe }}</td>
+                        </tr>
+                        <?php $i++; ?>
+                    @endforeach
+                @endforeach
+            </tbody> --}}
+            {{-- <thead>
+                <tr>
                     <td>Fecha</td>
                     <td>Mesa</td>
                     <td>Atendido por</td>
@@ -117,7 +215,7 @@
                         </td>
                     </tr>
                 @endforeach
-            </tbody>
+            </tbody> --}}
         </table>
     </div>
 

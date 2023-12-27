@@ -16,11 +16,17 @@
     <link rel="stylesheet" href="{{ asset('css/extra.css') }}">
     <link rel="stylesheet" href="{{  asset('css/dataTables.min.css') }}">
     <link href="{{ asset('css/flowbite.min.css') }}"  rel="stylesheet" />
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/flowbite.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 </head>
 <body>
     <div class="bg-primary flex justify-between">
@@ -39,6 +45,10 @@
     <script>
         $(function(){
             $("#table, #table2").DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel'
+                ],
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ registros por página",
                     "zeroRecords": "Sin resultados",
