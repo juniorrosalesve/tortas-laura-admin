@@ -43,7 +43,7 @@
             <thead>
                 <tr>
                     <td>PedidoId</td>
-                    {{-- <td>Hora</td> --}}
+                    <td>Fecha</td>
                     <td>Producto</td>
                     <td>Cantidad</td>
                     <td>Precio del producto</td>
@@ -52,7 +52,7 @@
             </thead>
             <tbody>
                 @php
-                    $fechaIndicada = '23-12-2023'; // Actualiza esto con la fecha que deseas
+                    $fechaIndicada = '01-01-2024'; // Actualiza esto con la fecha que deseas
                     $productosAgrupados = array(); // Mover esta línea aquí
                 @endphp
                 
@@ -69,31 +69,29 @@
                         $fecha = $date->format('d-m-Y');
                         $xventas    =   [];
                     @endphp
-                    @if ($fecha == $fechaIndicada)
-                        @foreach ($venta['productos'] as $item)
-                            {{-- @if ($item['despachoId'] == 1)
-                                @continue
-                            @endif
-                            @if(strpos($item['nombre'], 'Merengada') === false && strpos($item['nombre'], 'Vaso') === false && strpos($item['nombre'], 'Batido') === false)
-                                <tr>
-                                    <td>{{ $venta['id'] }}</td>
-                                    <td>{{ $date->format('d-m-y h:i A') }}</td>
-                                    <td>{{ $item['nombre'] }}</td>
-                                    <td>{{ $item['cantidad'] }}</td>
-                                    <td>{{ $item['precio'] }}</td>
-                                    <td>{{ $item['precio']*$item['cantidad'] }}</td>
-                                </tr>
-                            @endif --}}
+                    @foreach ($venta['productos'] as $item)
+                        @if ($item['despachoId'] == 1)
+                            @continue
+                        @endif
+                        @if(strpos($item['nombre'], 'Merengada') === false && strpos($item['nombre'], 'Vaso') === false && strpos($item['nombre'], 'Batido') === false)
                             <tr>
                                 <td>{{ $venta['id'] }}</td>
-                                {{-- <td>{{ $date->format('d-m-y h:i A') }}</td> --}}
+                                <td>{{ $date->format('d-m-y h:i A') }}</td>
                                 <td>{{ $item['nombre'] }}</td>
                                 <td>{{ $item['cantidad'] }}</td>
                                 <td>{{ $item['precio'] }}</td>
                                 <td>{{ $item['precio']*$item['cantidad'] }}</td>
                             </tr>
-                        @endforeach
-                    @endif
+                        @endif
+                        {{-- <tr>
+                            <td>{{ $venta['id'] }}</td>
+                            <td>{{ $date->format('d-m-y') }}</td>
+                            <td>{{ $item['nombre'] }}</td>
+                            <td>{{ $item['cantidad'] }}</td>
+                            <td>{{ $item['precio'] }}</td>
+                            <td>{{ $item['precio']*$item['cantidad'] }}</td>
+                        </tr>  --}}
+                    @endforeach
                 @endforeach
             </tbody>
             <!-- Cafes -->

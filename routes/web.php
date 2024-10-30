@@ -65,4 +65,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/xxx', [VentaController::class, 'index'])->name('xxx');
+
 require __DIR__.'/auth.php';
